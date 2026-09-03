@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7c842" />
+    <meta name="description" content="用定位隨機抽出附近一間餐廳，立即解決今日食乜。" />
+    <meta property="og:title" content="食邊間？附近餐廳隨機推薦" />
+    <meta property="og:description" content="揀距離、撳一下，立即抽出附近一間餐廳。" />
+    <meta property="og:image" content="/restaurant-table.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <title>食邊間？｜附近餐廳隨機推薦</title>
+    <link rel="icon" href="/favicon.svg" />
+    <link rel="preload" href="/restaurant-table.jpg" as="image" />
+    <link rel="stylesheet" href="/styles.css" />
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="食邊間？首頁">
+        <span class="brand-mark" aria-hidden="true">食</span>
+        <span>食邊間<span class="brand-dot">？</span></span>
+      </a>
+      <div class="location-chip" id="locationChip" aria-live="polite">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        <span>尚未取得位置</span>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="pageTitle">
+        <div class="hero-copy">
+          <p class="eyebrow"><span></span> 今日食乜好？</p>
+          <h1 id="pageTitle">唔使諗，<br /><em>撳一下就食！</em></h1>
+          <p class="intro">根據你的位置，由附近香港持牌食肆中隨機抽一間。<br class="desktop-only" />少啲選擇困難，多啲時間食飯。</p>
+
+          <div class="finder-card">
+            <div class="mode-tabs" role="tablist" aria-label="選擇位置方式">
+              <button class="mode-tab active" type="button" role="tab" aria-selected="true" data-mode="auto">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="8"/></svg>
+                自動定位
+              </button>
+              <button class="mode-tab" type="button" role="tab" aria-selected="false" data-mode="manual">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16M6 17l10-10 3 3-10 10H6v-3Z"/></svg>
+                自行輸入
+              </button>
+            </div>
+
+            <div class="manual-field" id="manualField" hidden>
+              <label for="addressInput">你的位置</label>
+              <div class="input-shell">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                <input id="addressInput" autocomplete="street-address" placeholder="例如：旺角朗豪坊" />
+              </div>
+            </div>
+
+            <fieldset class="distance-fieldset">
+              <legend>想行幾遠？</legend>
+              <div class="distance-options">
+                <label><input type="radio" name="distance" value="50" /><span>50<small>米</small></span></label>
+                <label><input type="radio" name="distance" value="100" /><span>100<small>米</small></span></label>
+                <label><input type="radio" name="distance" value="500" checked /><span>500<small>米</small></span></label>
+                <label><input type="radio" name="distance" value="1000" /><span>1<small>公里</small></span></label>
+              </div>
+            </fieldset>
+
+            <button class="pick-button" id="pickButton" type="button">
+              <span class="button-label">幫我揀！</span>
+              <span class="button-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 7h10v10M7 17 17 7"/></svg></span>
+            </button>
+            <p class="privacy-note">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+              位置只會用作今次搜尋，不會儲存。
+            </p>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="sunburst"></div>
+          <figure class="food-photo">
+            <img src="/restaurant-table.jpg" alt="" />
+            <figcaption>附近美食<br /><strong>等你發掘</strong></figcaption>
+          </figure>
+          <div class="sticker sticker-top">是但啦<br /><strong>GO!</strong></div>
+          <div class="sticker sticker-bottom">一撳<br /><strong>即食</strong></div>
+        </div>
+      </section>
+
+      <section class="result-section" id="resultSection" aria-live="polite" aria-atomic="true" hidden>
+        <div class="result-card" id="resultCard"></div>
+      </section>
+
+      <section class="steps" aria-label="使用方法">
+        <article><span>01</span><div><h2>話我知你喺邊</h2><p>自動定位，或者自行輸入地點。</p></div></article>
+        <article><span>02</span><div><h2>揀想行幾遠</h2><p>由樓下 50 米到附近 1 公里。</p></div></article>
+        <article><span>03</span><div><h2>交畀運氣決定</h2><p>隨機抽一間，唔鍾意可以再撳。</p></div></article>
+      </section>
+    </main>
+
+    <footer>
+      <p>主要食肆資料：<a href="https://portal.csdi.gov.hk/csdi-webpage/dataset/fehd_rcd_1630036390312_58893" target="_blank" rel="noreferrer">食物環境衞生署／CSDI</a>・位置搜尋：<a href="https://portal.csdi.gov.hk/csdi-webpage/apidoc/LocationSearchAPI" target="_blank" rel="noreferrer">地政總署</a>・後備：<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap contributors</a></p>
+      <p>相片：<a href="https://www.pexels.com/photo/delicious-traditional-asian-dim-sum-dishes-in-wooden-bowls-served-on-table-4913345/" target="_blank" rel="noreferrer">Maria Orlova / Pexels</a></p>
+    </footer>
+  </body>
+</html>
